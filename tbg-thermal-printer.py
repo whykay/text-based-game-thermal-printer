@@ -1,55 +1,153 @@
+
+import adafruit_thermal_printer
+import board
+import busio
+import serial
+
+import RPi.GPIO as GPIO
+
 import random
+import time
 
 class Game:
     stage = 0 # Default
     button_pressed = None # 0:left / 1:right / 2:reset
 
     # games_dict = {game_number:{stage_number:{text,button}}
-    games_dict = {0:{0:{"text":"You wake up and as you blink your bleary eyes, you... \nPick <yellow> or <blue>",
+    games_dict = {0:{0:{"text":"You wake up and as you blink your bleary eyes, you...",
                         "button":(None, None, None)},
-                    1:{"text:":"You hear a sound...like a <thump>... \nPick <yellow> or <blue>",
-                        "button":("You fall out of bed... ouch!","You find your glasses. \"Oh, that's better!\"\nNow what?", None)},
-                    2:{"text":"Ok, I heard something, better check it out. You pick up a...",
-                        "button":("You pick up your phone.", "I just need coffee...", None)},
+                    1:{"text":"You hear a sound...like a [thump]...",
+                        "button":("You fall out of bed... ouch!","You find your glasses. \"Oh, that is better! Now what?", None)},
+                    2:{"text":"Well, now that I'm awake, it was just all a dream. Thanks for playing.\n\n",
+                        "button":("You pick up your phone.", "I just need coffee...\n\n", None)},
                     },
-                  1:{0:{"text":"This is game number two", 
+                  1:{0:{"text":"This is game number two",
                         "button":(None, None, None)},
-                     1:{"text":"one to stage 2",
-                        "button":("meow1", "meow2", None)},
-                     2:{"text":"next is game over",
-                        "button":("meowmeow1", "meow2meow2", None)}
+                     1:{"text":"STAGE 2: Meow mewo meow meow, what's your next choice?",
+                        "button":("meow1 choice 1", "meow2 choice", None)},
+                     2:{"text":"next is game over\n\n",
+                        "button":(None, None, None)}
                     }
     }
 
     num_of_games = len(games_dict)
     game_number = random.randint(0, num_of_games-1)
 
-def welcome():
-    print("Welcome to Vicky's print and play text-based adventure game.")
+def pushed_coloured_button(button_colour):
+    printer.justify = adafruit_thermal_printer.JUSTIFY_CENTER
+    printer.print(f"You pushed a {button_colour} button.\n =^_^=")
+    printer.justify = adafruit_thermal_printer.JUSTIFY_LEFT
+    printed = True
+    printer.feed(2)
+    printer.print("You wake up and you decide today was the day that is going to be the best day ever!")
+    printer.feed(2)
+    return printed
 
-def start_game():
+def print_endgame_message():
+    printer.justify = adafruit_thermal_printer.JUSTIFY_CENTER
+    printer.double_height = True
+    printer.print("Thanks for playing!")
+    printer.double_height = False
+
+    printer.print("Made by Vicky Twomey-Lee")
+
+    printer.double_width = True
+    printer.print("Maker Advocate\n\n")
+    printer.double_width = False
+
+    printer.bold = True
+    printer.print("Dublin Maker Festival\nSat Jun 27, Herbert Park, Dublin\nDublinMaker.ie\n\n")
+    printer.bold = False
+
+    printer.print("Inspired by Der Choosatron found at Berlin Game Science Center")
+    printer.justify = adafruit_thermal_printer.JUSTIFY_LEFT
+    printer.feed(5)
+
+def print_game_text(game_choice):
+    current_game = game_choice.games_dict[game_choice.game_number]
+    print(f"print_game_text::::: {current_game} / {game_choice.button_pressed}")
+    print(current_game[a_game.stage]["button"])
+    print
+
+    try:
+        if game_choice.button_pressed:
+            printer.print(current_game[a_game.stage]["button"][game_choice.button_pressed])
+    except:
+        pass
+
+    printer.print(current_game[a_game.stage]["text"])
+
+    if a_game.stage < 2:
+        print_button_choices_text()
+
+def print_button_choices_text():
+    printer.print("\t\t|\t\t\t|")
+    printer.print("\t\t|\t\t\t|")
+    printer.print("[yellow/left]\t\t[blue/right]")
+    printer.feed(3)
+
+GPIO.setmode(GPIO.BCM)
+
+GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+games = {0:"Fun game 1", 1:"Fun game 2"}
+game_picked = False
+
+ThermalPrinter = adafruit_thermal_printer.get_printer_class(2.69)
+RX = board.RX
+TX = board.TX
+
+uart = serial.Serial("/dev/serial0", baudrate=19200, timeout=3000)
+printer = ThermalPrinter(uart, auto_warm_up=False)
+printer.warm_up()
+
+printer.feed(2)
+printer.double_height = True
+printer.underline = adafruit_thermal_printer.UNDERLINE_THICK
+printer.print("Welcome to Vicky's print and play your own text-based adventure game")
+printer.double_height = False
+printer.underline = None
+
+printer.feed(2)
+printer.bold = True
+printer.print("Push a button to start playing.")
+printer.bold = False
+printer.feed(2)
+
+printed = False
+print_button_choices_text()
+
+try:
     a_game = Game()
-    a_game.button_colour = button
-
-    # Start game message
-    current_game = a_game.games_dict[a_game.game_number]
-    print(current_game[a_game.stage]["text"])
+    print(f">>> GAME STARTS. STAGE {a_game.stage}")
 
     while True:
-        picked = int(input())
-        a_game.stage += 1
-        if a_game.stage > 2:
-            return
+        blue_button_state = GPIO.input(16)
+        yellow_button_state = GPIO.input(23)
 
-        button_picked = current_game[a_game.stage]["button"][picked]
-        if not button_picked:
-            print("RESETTING")
-            return
-        print(current_game[a_game.stage]["button"][picked])
+        if not blue_button_state:
+            print("Blue button pressed")
+            a_game.button_pressed = 1
+            print_game_text(a_game)
+            print(f"> Stage: {a_game.stage}")
 
+            a_game.stage += 1
 
-if __name__ == "__main__":
-    button = "yellow"
-    welcome()
-    start_game()
-    print("\nGAME OVER\n")
+            time.sleep(0.2)
+
+        elif not yellow_button_state and not printed:
+            print("Yellow button state")
+            a_game.button_pressed = 0
+
+            printed = pushed_coloured_button("yellow")
+            if printed:
+                printed = False
+            time.sleep(0.2)
+        elif a_game.stage == 3:
+            a_game = Game()
+            print(">GAME TO RESET")
+            print(">END OF GAME, THANKS FOR PLAYING")
+            print_endgame_message()
+except:
+    GPIO.cleanup()
