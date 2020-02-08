@@ -73,13 +73,13 @@ def print_endgame_message():
 
 def print_game_text(game_choice):
     current_game = game_choice.games_dict[game_choice.game_number]
-    print(f"print_game_text::::: {current_game} / {game_choice.button_pressed}")
     print(current_game[a_game.stage]["button"])
     print
 
     try:
-        if game_choice.button_pressed:
-            printer.print(current_game[a_game.stage]["button"][game_choice.button_pressed])
+        if game_choice.button_pressed != None:
+            button_choice_text = current_game[a_game.stage]["button"][game_choice.button_pressed]
+            printer.print(button_choice_text)
     except:
         pass
 
@@ -125,24 +125,19 @@ try:
             print("Blue button pressed")
             a_game.button_pressed = 1
             print_game_text(a_game)
-            #print(f"> Stage: {a_game.stage}")
             a_game.stage += 1
-
             time.sleep(0.2)
-
         elif not yellow_button_state:
-            print("Yellow button state")
+            print("Yellow button pressed")
             a_game.button_pressed = 0
             print_game_text(a_game)
             a_game.stage += 1
-
             time.sleep(0.2)
         elif a_game.stage == 3:
             a_game = Game()
             print(">GAME TO RESET")
             print(">END OF GAME, THANKS FOR PLAYING")
             print_endgame_message()
-
             print_welcome_message(printer)
 except:
     GPIO.cleanup()
