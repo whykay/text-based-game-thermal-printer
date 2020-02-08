@@ -24,24 +24,32 @@ class Game:
                   1:{0:{"text":"This is game number two",
                         "button":(None, None, None)},
                      1:{"text":"STAGE 2: Meow mewo meow meow, what's your next choice?",
-                        "button":("meow1 choice 1", "meow2 choice", None)},
+                        "button":("meow1 yellow choice 1", "meow2 blue choice", None)},
                      2:{"text":"next is game over\n\n",
-                        "button":(None, None, None)}
+                        "button":("No more Mews for you", "Meowthing to see here. but thank you for playing\n\n", None)}
                     }
     }
 
     num_of_games = len(games_dict)
     game_number = random.randint(0, num_of_games-1)
 
-def pushed_coloured_button(button_colour):
-    printer.justify = adafruit_thermal_printer.JUSTIFY_CENTER
-    printer.print(f"You pushed a {button_colour} button.\n =^_^=")
-    printer.justify = adafruit_thermal_printer.JUSTIFY_LEFT
-    printed = True
+def print_welcome_message(printer):
+    ''' Prints the welcome message when game starts'''
     printer.feed(2)
-    printer.print("You wake up and you decide today was the day that is going to be the best day ever!")
+    printer.double_height = True
+    printer.underline = adafruit_thermal_printer.UNDERLINE_THICK
+    printer.print("Welcome to Vicky's print and play your own text-based adventure game")
+    printer.double_height = False
+    printer.underline = None
+
     printer.feed(2)
-    return printed
+    printer.bold = True
+    printer.print("Push a button to start playing.")
+    printer.bold = False
+    printer.feed(2)
+
+    printed = False
+    print_button_choices_text()
 
 def print_endgame_message():
     printer.justify = adafruit_thermal_printer.JUSTIFY_CENTER
@@ -102,21 +110,8 @@ uart = serial.Serial("/dev/serial0", baudrate=19200, timeout=3000)
 printer = ThermalPrinter(uart, auto_warm_up=False)
 printer.warm_up()
 
-printer.feed(2)
-printer.double_height = True
-printer.underline = adafruit_thermal_printer.UNDERLINE_THICK
-printer.print("Welcome to Vicky's print and play your own text-based adventure game")
-printer.double_height = False
-printer.underline = None
-
-printer.feed(2)
-printer.bold = True
-printer.print("Push a button to start playing.")
-printer.bold = False
-printer.feed(2)
-
-printed = False
-print_button_choices_text()
+# Print welcome message
+print_welcome_message(printer)
 
 try:
     a_game = Game()
@@ -130,24 +125,24 @@ try:
             print("Blue button pressed")
             a_game.button_pressed = 1
             print_game_text(a_game)
-            print(f"> Stage: {a_game.stage}")
-
+            #print(f"> Stage: {a_game.stage}")
             a_game.stage += 1
 
             time.sleep(0.2)
 
-        elif not yellow_button_state and not printed:
+        elif not yellow_button_state:
             print("Yellow button state")
             a_game.button_pressed = 0
+            print_game_text(a_game)
+            a_game.stage += 1
 
-            printed = pushed_coloured_button("yellow")
-            if printed:
-                printed = False
             time.sleep(0.2)
         elif a_game.stage == 3:
             a_game = Game()
             print(">GAME TO RESET")
             print(">END OF GAME, THANKS FOR PLAYING")
             print_endgame_message()
+
+            print_welcome_message(printer)
 except:
     GPIO.cleanup()
