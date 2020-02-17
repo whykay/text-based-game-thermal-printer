@@ -53,9 +53,6 @@ def print_welcome_message(printer):
 
 def print_endgame_message():
     printer.justify = adafruit_thermal_printer.JUSTIFY_CENTER
-    printer.double_height = True
-    printer.print("Thanks for playing!")
-    printer.double_height = False
 
     printer.print("Made by Vicky Twomey-Lee")
 
@@ -69,6 +66,8 @@ def print_endgame_message():
 
     printer.print("Inspired by Der Choosatron found at Berlin Game Science Center")
     printer.justify = adafruit_thermal_printer.JUSTIFY_LEFT
+
+    #printer.printBitmap(380, 206,
     printer.feed(5)
 
 def print_game_text(game_choice):
@@ -98,6 +97,7 @@ GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 games = {0:"Fun game 1", 1:"Fun game 2"}
 game_picked = False
@@ -120,6 +120,7 @@ try:
     while True:
         blue_button_state = GPIO.input(16)
         yellow_button_state = GPIO.input(23)
+        black_button_state = GPIO.input(26)
 
         if not blue_button_state:
             print("Blue button pressed")
@@ -133,11 +134,22 @@ try:
             print_game_text(a_game)
             a_game.stage += 1
             time.sleep(0.2)
-        elif a_game.stage == 3:
+        elif not black_button_state or a_game.stage == 3:
             a_game = Game()
-            print(">GAME TO RESET")
-            print(">END OF GAME, THANKS FOR PLAYING")
-            print_endgame_message()
+            if not black_button_state:
+                print(">GAME TO RESET")
+                printer.print("Ok, let's restart the game!\n\n")
+            else:
+                print(">END OF GAME, THANKS FOR PLAYING")
+                printer.double_height = True
+                printer.print("Thanks for playing!\n\n")
+                printer.double_height = False
+
+                print_endgame_message()
+
+
+
+
             print_welcome_message(printer)
 except:
     GPIO.cleanup()
