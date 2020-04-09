@@ -10,26 +10,9 @@ class Game:
     stage = 0 # Default
     button_pressed = None # 0:left / 1:right / 2:reset
     games = None
-    """
-    # games_dict = {game_number:{stage_number:{text,button}}
-    games_dict = {0:{0:{"text":"You wake up and as you blink your bleary eyes, you...",
-                        "button":(None, None, None)},
-                    1:{"text":"You hear a sound...like a [thump]...",
-                        "button":("You fall out of bed... ouch!","You find your glasses. \"Oh, that is better! Now what?", None)},
-                    2:{"text":"Well, now that I'm awake, it was just all a dream. Thanks for playing.\n\n",
-                        "button":("You pick up your phone.", "I just need coffee...\n\n", None)},
-                    },
-                  1:{0:{"text":"This is game number two",
-                        "button":(None, None, None)},
-                     1:{"text":"STAGE 2: Meow mewo meow meow, what's your next choice?",
-                        "button":("meow1 yellow choice 1", "meow2 blue choice", None)},
-                     2:{"text":"next is game over\n\n",
-                        "button":("No more Mews for you", "Meowthing to see here. but thank you for playing\n\n", None)}
-                    }
-    }
-    """
     num_of_games = 0
     game_number = 0
+
 
 def print_welcome_message(printer):
     ''' Prints the welcome message when game starts'''
@@ -43,6 +26,7 @@ def print_welcome_message(printer):
     printer.feed(2)
     printer.out("Push a button to start playing.", bold=True)
     print_button_choices_text()
+
 
 def print_endgame_message():
     printer.out("Made by Vicky Twomey-Lee", justify="C")
@@ -97,9 +81,6 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(16, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(26, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-
-games = {0:"Fun game 1", 1:"Fun game 2"}
-game_picked = False
 
 printer = ThermalPrinter(port="/dev/serial0")
 
