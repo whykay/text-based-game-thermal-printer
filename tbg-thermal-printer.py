@@ -1,18 +1,15 @@
+import json, random, time
 
 import adafruit_thermal_printer
-import board
-import busio
-import serial
+import board, busio, serial
 
 import RPi.GPIO as GPIO
-
-import random
-import time
 
 class Game:
     stage = 0 # Default
     button_pressed = None # 0:left / 1:right / 2:reset
-
+    games = None
+    """
     # games_dict = {game_number:{stage_number:{text,button}}
     games_dict = {0:{0:{"text":"You wake up and as you blink your bleary eyes, you...",
                         "button":(None, None, None)},
@@ -29,9 +26,10 @@ class Game:
                         "button":("No more Mews for you", "Meowthing to see here. but thank you for playing\n\n", None)}
                     }
     }
-
-    num_of_games = len(games_dict)
-    game_number = random.randint(0, num_of_games-1)
+    """
+    num_of_games = 0
+    #game_number = random.randint(0, num_of_games-1)
+    game_number = 0
 
 def print_welcome_message(printer):
     ''' Prints the welcome message when game starts'''
@@ -61,7 +59,7 @@ def print_endgame_message():
     printer.double_width = False
 
     printer.bold = True
-    printer.print("Dublin Maker Festival\nSat Jun 27, Herbert Park, Dublin\nDublinMaker.ie\n\n")
+    printer.print("Dublin Maker Festival\nSummer 2021\nDublinMaker.ie\n\n")
     printer.bold = False
 
     printer.print("Inspired by Der Choosatron found at Berlin Game Science Center")
@@ -71,7 +69,28 @@ def print_endgame_message():
     printer.feed(5)
 
 def print_game_text(game_choice):
-    current_game = game_choice.games_dict[game_choice.game_number]
+    current_game = game_choice.games[game_choice.game_number].get("game_stage")[game_choice.stage]
+    #print(f"[print_game_text] current_game: {current_game}")
+    ##print(f'{current_game.get("button")[game_choice.button_pressed]}')
+
+
+    try:
+        if game_choice.button_pressed != 2:
+            button_choice_text = current_game.get("button")[game_choice.button_pressed]
+            print(button_choice_text)
+            printer.print(button_choice_text)
+    except:
+        pass
+
+    print(current_game.get("text"))
+    printer.print(current_game.get("text"))
+
+    print(f">game_choice.stage {game_choice.stage}")
+    if game_choice.stage < 2:
+        print_button_choices_text()
+
+
+    """
     print(current_game[a_game.stage]["button"])
     print
 
@@ -86,12 +105,22 @@ def print_game_text(game_choice):
 
     if a_game.stage < 2:
         print_button_choices_text()
+    """
 
 def print_button_choices_text():
     printer.print("\t\t|\t\t\t|")
     printer.print("\t\t|\t\t\t|")
     printer.print("[yellow/left]\t\t[blue/right]")
     printer.feed(3)
+
+def pick_a_game(json_data):
+    a_game = Game()
+    a_game.games = json_data
+    a_game.num_of_games = len(a_game.games)
+
+    # Set up to pick a random game
+    a_game.game_number = random.randint(0, a_game.num_of_games-1)
+    return a_game
 
 GPIO.setmode(GPIO.BCM)
 
@@ -113,9 +142,32 @@ printer.warm_up()
 # Print welcome message
 print_welcome_message(printer)
 
+# Load the JSON file called games.json
+with open("games.json", "r") as f:
+    data = f.read()
+
+# We now have the json data
+# List of games (dictionaries)
+#   - each game dict has a list of stages that contains
+#   ---- text displayed at end of each stage
+#   ---- text depending if player pressed yellow or blue button
+#   ---- Black button only resets game, no texts
+json_data = json.loads(data)
+
 try:
+    """
     a_game = Game()
-    print(f">>> GAME STARTS. STAGE {a_game.stage}")
+    a_game.games = json_data
+    a_game.num_of_games = len(a_game.games)
+
+    # Set up to pick a random game
+    a_game.game_number = random.randint(0, a_game.num_of_games-1)
+    """
+    a_game = pick_a_game(json_data)
+
+    print(f"> a_game.num_of_games: {a_game.num_of_games}")
+    print(f">a_game.game_number: {a_game.game_number}")
+    print(f"> GAME STARTS. STAGE {a_game.stage}")
 
     while True:
         blue_button_state = GPIO.input(16)
@@ -123,33 +175,34 @@ try:
         black_button_state = GPIO.input(26)
 
         if not blue_button_state:
-            print("Blue button pressed")
+            print("> Blue button pressed <")
             a_game.button_pressed = 1
             print_game_text(a_game)
             a_game.stage += 1
             time.sleep(0.2)
         elif not yellow_button_state:
-            print("Yellow button pressed")
+            print("> Yellow button pressed <")
             a_game.button_pressed = 0
             print_game_text(a_game)
             a_game.stage += 1
             time.sleep(0.2)
-        elif not black_button_state or a_game.stage == 3:
+        elif not black_button_state or a_game.stage == 2:
             a_game = Game()
             if not black_button_state:
                 print(">GAME TO RESET")
                 printer.print("Ok, let's restart the game!\n\n")
+                print_button_choices_text()
             else:
                 print(">END OF GAME, THANKS FOR PLAYING")
                 printer.double_height = True
                 printer.print("Thanks for playing!\n\n")
                 printer.double_height = False
 
-                print_endgame_message()
+                #print_endgame_message()
+            a_game = pick_a_game(json_data)
 
 
 
-
-            print_welcome_message(printer)
+            #print_welcome_message(printer)
 except:
     GPIO.cleanup()
