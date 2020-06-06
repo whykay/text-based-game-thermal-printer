@@ -1,1 +1,66 @@
-[{"game": 0, "game_stage": [{"id": 0, "text": "But it's getting dark. Strange, why is it getting brighter again as you get closer to where you found yourself earlier?\n\nThere's a gate to your left that leads to a small quaint house.\n\nTo your right, someone is coming up the road singing a jaunty song.", "button": ["You have chosen well. Yellow is the colour of gold, sunshine, not of fear.\n\nYou are in a world of wonder, surrounded by happiness and it seems to be too rose-tinted to be true.", "Blue is the colour of a peaceful mind. It feels so serene here, so safe.\n\nWhat is this amazing place. \n\n\n\n", ""]}, {"id": 1, "text": "What happens next? \n\nYellow or Blue button", "button": ["The small quaint house's roof was sparkling like inside of a shell, its walls were made of brick of an undefined colour which seems to shift depending on the light. The garden was bountiful of flowers unknown. ", "With the biggest smile, you look up the individual who was walking at an even pace towards you.", ""]}, {"id": 2, "text": "All of a sudden... you were shaken and confusingly, you open your eyes blearily looking up at a few pairs of eyes staring worringly at you. Realising that what you thought you saw was just a distant memory, and you were knocked unconscious after taking a tumble after falling out of a bouncy castle.\nYes, adults are not meant to be in bouncy castles, but it's too much fun. Ow, my head... \"I'm alright!\" as you get up and proceeded back into the bouncy castle. \n\nThe End", "button": ["The feeling of serenity hits you, you are dreaming, right? This feels so peaceful.", "You noticed the suit, then the walking stick, then those eyes the smile was menacing. You try and back away\u2026", ""]}]}, {"game": 1, "game_stage": [{"id": 0, "text": "He is a comedian from The Grove who is writing a book.\n\nOne day, he exchanges a cow for some magic beans.", "button": ["Dear reader, I wish I could tell you that it ends well for you. Well, more pointedly at someone called T. Spruce.", "Do you know T. Spruce?", ""]}, {"id": 1, "text": "But Spruce returns to old habits.", "button": ["He realises he must first find the magic ring.", "He decides to uncover the truth. Unfortunately, things do not go as planned and the precious object was actually worthless.", ""]}, {"id": 2, "text": "Spruce and Hat become a permanent crime fighting duo.\n\nThe End", "button": ["He decides to investigate further. He enlists the help of her best friend, a student called Hat Mara. Together they found a valuable gold goblet, and stumbles upon a book that predicts\u00a0their future. However, nobody laughs at his jokes. ", "Luckily, he is able to talk himself out of the situation with the help of a companion called Hat Mara.", ""]}]}]
+[
+    {
+        "game": 0,
+        "game_stage": [
+            {
+                "id": 0,
+                "text": "But it's getting dark. Strange, why is it getting brighter again as you get closer to where you found yourself earlier?\n\nThere's a gate to your left that leads to a small quaint house.\n\nTo your right, someone is coming up the road singing a jaunty song.",
+                "button": [
+                    "You have chosen well. Yellow is the colour of gold, sunshine, not of fear.\n\nYou are in a world of wonder, surrounded by happiness and it seems to be too rose-tinted to be true.",
+                    "Blue is the colour of a peaceful mind. It feels so serene here, so safe.\n\nWhat is this amazing place. \n\n\n\n",
+                    ""
+                ]
+            },
+            {
+                "id": 1,
+                "text": "What happens next? \n\nYellow or Blue button",
+                "button": [
+                    "The small quaint house's roof was sparkling like inside of a shell, its walls were made of brick of an undefined colour which seems to shift depending on the light. The garden was bountiful of flowers unknown. ",
+                    "With the biggest smile, you look up the individual who was walking at an even pace towards you.",
+                    ""
+                ]
+            },
+            {
+                "id": 2,
+                "text": "All of a sudden... you were shaken and confusingly, you open your eyes blearily looking up at a few pairs of eyes staring worringly at you. Realising that what you thought you saw was just a distant memory, and you were knocked unconscious after taking a tumble after falling out of a bouncy castle.\nYes, adults are not meant to be in bouncy castles, but it's too much fun. Ow, my head... \"I'm alright!\" as you get up and proceeded back into the bouncy castle. \n\nThe End",
+                "button": [
+                    "The feeling of serenity hits you, you are dreaming, right? This feels so peaceful.",
+                    "You noticed the suit, then the walking stick, then those eyes the smile was menacing. You try and back away\u2026",
+                    ""
+                ]
+            }
+        ]
+    },
+    {
+        "game": 1,
+        "game_stage": [
+            {
+                "id": 0,
+                "text": "He is a comedian from The Grove who is writing a book.\n\nOne day, he exchanges a cow for some magic beans.",
+                "button": [
+                    "Dear reader, I wish I could tell you that it ends well for you. Well, more pointedly at someone called T. Spruce.",
+                    "Do you know T. Spruce?",
+                    ""
+                ]
+            },
+            {
+                "id": 1,
+                "text": "But Spruce returns to old habits.",
+                "button": [
+                    "He realises he must first find the magic ring.",
+                    "He decides to uncover the truth. Unfortunately, things do not go as planned and the precious object was actually worthless.",
+                    ""
+                ]
+            },
+            {
+                "id": 2,
+                "text": "Spruce and Hat become a permanent crime fighting duo.\n\nThe End",
+                "button": [
+                    "He decides to investigate further. He enlists the help of her best friend, a student called Hat Mara. Together they found a valuable gold goblet, and stumbles upon a book that predicts\u00a0their future. However, nobody laughs at his jokes. ",
+                    "Luckily, he is able to talk himself out of the situation with the help of a companion called Hat Mara.",
+                    ""
+                ]
+            }
+        ]
+    }
+]
