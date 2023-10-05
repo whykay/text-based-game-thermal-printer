@@ -17,7 +17,7 @@ class Game:
 def print_welcome_message(printer):
     ''' Prints the welcome message when game starts'''
     # The Dublin Maker logo at the top
-    printer.image(Image.open("dm-bw.png"))
+    printer.image(Image.open("pyladies-bw.png"))
 
     # Welcome message and instructions to start game
     printer.out("Welcome to Vicky's print and play your own text-based adventure game",
@@ -30,10 +30,10 @@ def print_welcome_message(printer):
 
 def print_endgame_message():
     printer.out("Made by Vicky Twomey-Lee", justify="C")
-    printer.out("Maker Advocate", double_width=True)
-    printer.out("Dublin Maker Festival", bold=True, justify="C")
-    printer.out("Summer 2021", bold=True, justify="C")
-    printer.out("DublinMaker.ie", bold=True, justify="C")
+    printer.out("Pythonista", double_width=True)
+    printer.out("PyLadies Dublin", bold=True, justify="C")
+    printer.out("Oct 17 2023", bold=True, justify="C")
+    printer.out("dublin.pyladies.com", bold=True, justify="C")
     printer.feed(1)
     printer.out("Inspired by Der Choosatron found at Berlin Game Science Center", justify="L")
     printer.feed(5)
