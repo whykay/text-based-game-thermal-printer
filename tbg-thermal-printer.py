@@ -30,9 +30,10 @@ def print_welcome_message(printer):
 
 def print_endgame_message():
     printer.out("Made by Vicky Twomey-Lee", justify="C")
-    printer.out("Pythonista", double_width=True)
+    printer.out("Pythonista", double_width=True, justify="C")
     printer.out("PyLadies Dublin", bold=True, justify="C")
     printer.out("Oct 17 2023", bold=True, justify="C")
+    printer.out("Happy 10th Anniversiary!", bold=True, justify="C")
     printer.out("dublin.pyladies.com", bold=True, justify="C")
     printer.feed(1)
     printer.out("Inspired by Der Choosatron found at Berlin Game Science Center", justify="L")
